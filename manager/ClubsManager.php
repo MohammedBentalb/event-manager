@@ -3,6 +3,7 @@
 namespace Manager;
 
 use Repo\ClubRepository;
+use Service\Filler;
 
 class ClubsManager{
     public function __construct(private ClubRepository $clubRepo) {}
@@ -10,7 +11,12 @@ class ClubsManager{
     public function list(){
         $res = $this->clubRepo->findAll();
         var_dump($res);
-        // (new Filler())->fillEntity(new club, ["id" => 1, "title" => "testing here", "yiy" => "yisi"]);
+    }
+
+    public function listOne(){
+        $id = input("give the tournament id: ");
+        $res = $this->clubRepo->findById((int) $id);
+        var_dump($res);
     }
 
     public function create(){

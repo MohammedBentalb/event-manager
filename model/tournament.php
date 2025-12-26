@@ -25,8 +25,8 @@ class Tournament {
     private $date;
     private $createdAt;
 
-    #[OneToMany("tournamentId", club::class)]
-    private array $clubs = [];
+    #[OneToMany("tournamentId", Matches::class)]
+    private array $matches = [];
     
     public function __construct(){}
 
@@ -72,7 +72,11 @@ class Tournament {
         return $this->date;
     }
 
-    public function getCreationDate(){
+    public function setCreationDate($value){
+        return $this->createdAt = $value;
+    }
+
+    public function getCreatedAt(){
         return $this->createdAt;
     }
 }

@@ -61,7 +61,11 @@ class Team{
         return $this->game;
     }
 
-    public function getCreationDate(){
+    public function setCreatedAt($value){
+        return $this->createdAt = $value;
+    }
+
+    public function getCreatedAt(){
         return $this->createdAt;
     }
 }

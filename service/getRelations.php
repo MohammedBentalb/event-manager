@@ -19,7 +19,7 @@ class GetRelations{
                     $OneToMany = $hasRelation->newInstance();
                     $JoinKey = $OneToMany->foreignKey;
                     $joinTable = $this->tableResolver->getTableName($OneToMany->tergetModel);
-                    $relations[] = ["joinKey" => $JoinKey, "joinTable" => $joinTable];    
+                    $relations[] = ["joinKey" => $JoinKey, "joinTable" => $joinTable, "targetModel" => "$OneToMany->tergetModel"];    
             }
         }
         return $relations;

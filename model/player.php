@@ -45,8 +45,12 @@ class Player {
         return $this->city;
     }
 
-    public function getCreationDate(){
+    public function getCreatedAt(){
         return $this->createdAt;
+    }
+
+    public function setCreatedAt($value){
+        return $this->createdAt = $value;
     }
 
 }

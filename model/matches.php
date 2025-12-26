@@ -6,8 +6,8 @@ use Attributes\Preserve;
 use Attributes\Required;
 use Attributes\Table;
 
-#[Table("matchs")]
-class Matchs{
+#[Table("matches")]
+class Matches{
     #[Preserve]
     private $id;
     #[Preserve]
@@ -90,8 +90,12 @@ class Matchs{
         return $this->winnerId;
     }
 
-    public function getCreationDate(){
+    public function getCreatedAt(){
         return $this->createdAt;
+    }
+
+    public function setCreatedAt($value){
+        return $this->createdAt = $value;
     }
 
 }

@@ -4,17 +4,19 @@ namespace ORM;
 
 use Database\Database;
 use \PDO;
+use Service\AliasProperties;
+use Service\Filler;
 use Service\GetRelations;
 use Validation\EntityResolver;
 
 
 
-abstract class EntityManager  {
+abstract class EntityManager {
     protected static string $entityTable;
     protected static string $entityClass;
     private PDO $conn;
     
-    public function __construct(private EntityResolver $resolver, private GetRelations $getRelations){
+    public function __construct(private EntityResolver $resolver, private GetRelations $getRelations, private AliasProperties $aliasModel, private Filler $entiityFiller){
         $this->conn = Database::getConnection();
     }
     
@@ -32,19 +34,34 @@ abstract class EntityManager  {
         return $res;
     }
 
-    public function findAll(){
-        // ["joinKey" => $joinKey, "joinTable" => $joinTbale] = $this->getRelations->getRelation(static::$entityClass);
+    public function findAll(){       
         $relations = $this->getRelations->getRelation(static::$entityClass);
+        // generating aliases from properties to avoid overwriting the colums eith thesame name like id and created at
+        $baseAliases = $this->aliasModel->aliasAllProperties(static::$entityClass);
+
+        $aliases[] = $baseAliases;
         $joins = [];
-        
+        // table first name to be used as an alias for the query
+        $baseTAlias = str_split(static::$entityTable)[0];
+        $baseTable = static::$entityTable;
+        // final array that would be used in the query; it containes all aliases needed for create the query
+        $basePAlias = [];
         foreach($relations as $relation){
-            $joins[] = "JOIN {$relation['joinTable']} ON {$relation['joinTable']}.{$relation['joinKey']} = " . static::$entityTable . ".id";
+            $relationTAlias = str_split($relation['joinTable'])[0];
+            $joins[] = "LEFT JOIN {$relation['joinTable']} $relationTAlias ON $relationTAlias.{$relation['joinKey']} = " . $baseTAlias . ".id";
+            $aliases[] = $this->aliasModel->aliasAllProperties($relation["targetModel"]);
         }
-        
-        $stm = $this->conn->prepare("SELECT * FROM " . static::$entityTable . " " . implode(", ", $joins) ." ORDER BY " .  static::$entityTable. ".created_at");
+        if(!empty($joins)) $core = " " . static::$entityTable . ".id AS "; 
+
+        foreach($aliases as $a){
+            $basePAlias[] = implode(", ", $a);
+        }
+
+        $stm = $this->conn->prepare("SELECT ". implode(",", $basePAlias) . " FROM $baseTable $baseTAlias " . implode(" ", $joins) ." ORDER BY " . $baseTAlias . ".created_at");
         $stm->execute();
         $res = $stm->fetchAll();
-        return $res ? $res : null;
+        var_dump($res);
+        return $res ? $this->entiityFiller->fillEntity(static::$entityClass, $res) : null;
     }
 
     public function findById(int $id){

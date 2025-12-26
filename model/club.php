@@ -38,10 +38,6 @@ class club {
         return $this->name = $value;
     }
 
-    public function setCreationDate($value){
-        return $this->createdAt = $value;
-    }
-
     public function getId(){
         return $this->id;
     }
@@ -54,7 +50,11 @@ class club {
         return $this->name;
     }
 
-    public function getCreationDate(){
+    public function setCreatedAt($value){
+        return $this->createdAt = $value;
+    }
+
+    public function getCreatedAt(){
         return $this->createdAt;
     }
 }
