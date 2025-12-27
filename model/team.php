@@ -10,17 +10,17 @@ use Attributes\Table;
 #[Table("teams")]
 class Team{
     #[Preserve]
-    private $id;
+    private ?int $id = null;
     #[Preserve]
     #[Required]
-    private $clubId;
+    private int $clubId;
     #[Preserve]
     #[Required]
-    private $name;
+    private string $name;
     #[Preserve]
     #[Required]
-    private $game;
-    private $createdAt;
+    private string $game;
+    private string $createdAt;
 
     #[OneToMany("teamId", Player::class)]
     private array $players = [];
@@ -37,7 +37,7 @@ class Team{
         return $this->clubId = $value;
     }
 
-    public function setScoreB($value){
+    public function setName($value){
         return $this->name = $value;
     }
 
@@ -53,7 +53,7 @@ class Team{
         return $this->clubId;
     }
 
-    public function getScoreB(){
+    public function getName(){
         return $this->name;
     }
 

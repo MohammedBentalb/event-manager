@@ -9,26 +9,26 @@ use Attributes\Table;
 #[Table("matches")]
 class Matches{
     #[Preserve]
-    private $id;
+    private ?int $id = null;
     #[Preserve]
     #[Required]
-    private $score_a;
+    private int $score_a;
     #[Preserve]
     #[Required]
-    private $score_b;
+    private int $score_b;
     #[Preserve]
     #[Required]
-    private $tournamentId;
+    private int $tournamentId;
     #[Preserve]
     #[Required]
-    private $team_a;
+    private string $team_a;
     #[Preserve]
     #[Required]
-    private $team_b;
+    private string $team_b;
     #[Preserve]
     #[Required]
-    private $winnerId;
-    private $createdAt;
+    private int $winnerId;
+    private string $createdAt;
     
     public function __construct(){}
 

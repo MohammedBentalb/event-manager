@@ -1,5 +1,4 @@
 <?php
-
 namespace Service;
 
 use Attributes\OneToMany;
@@ -7,44 +6,73 @@ use Attributes\Table;
 use Exception;
 use ReflectionClass;
 
-class Filler{
-    public function __construct(private Strings $strings){}
-    
-    public function fillEntity(string $modalClass, array $data){
-        if(!$data) throw new Exception("the needed data is not set: $data is recieved");
-        if(!$modalClass) throw new Exception("the needed class modal is not set: $modalClass is recieved");
+class Filler {
+    public function __construct(private Strings $strings) {}
 
-        $ref = new ReflectionClass($modalClass);
-        $entity = $ref->newInstance();
-        $entity->setId(12);
-        var_dump($entity);
-        $tableAttribute = $ref->getAttributes(Table::class)[0];
-        $joinTable = "";
-        foreach($ref->getProperties() as $property){
-            if($property->getAttributes(OneToMany::class)){
-                $joinTable = $property->getName();
+    public function fillEntity(string $modelClass, array $data): array {
+        if (!$data) throw new Exception("No data received to hydrate entity.");
+        if (!$modelClass) throw new Exception("Model class not provided.");
+
+        $items = [];
+        $ref = new ReflectionClass($modelClass);
+        $tableAttr = $ref->getAttributes(Table::class)[0]->newInstance();
+        $tableName = $tableAttr->tableName;
+
+        $relations = [];
+        foreach ($ref->getProperties() as $property) {
+            $attributes = $property->getAttributes(OneToMany::class);
+            if ($attributes) {
+                $attr = $attributes[0]->newInstance();
+                $relations[$property->getName()] = $attr->tergetModel;
             }
         }
 
-        $tableName = $tableAttribute->newInstance()->tableName;
-        $items = [];
+        foreach ($data as $datum) {
+            $itemKey = $datum[$tableName . '_id'] ?? null;
+            if (!$itemKey) continue;
 
+            if (!isset($items[$itemKey])) {
+                $entity = $ref->newInstance();
+                foreach ($datum as $key => $value) {
+                    if (str_starts_with($key, $tableName . '_')) {
+                        $bareKey = ucfirst(str_replace($tableName . '_', '', $key));
+                        if (in_array($bareKey, ['Created_at', 'Update_at'])) {
+                            $bareKey = $this->strings->toCamelCase($bareKey, true);
+                        }
+                        if ($ref->hasMethod("set$bareKey")) {
+                            $method = $ref->getMethod("set$bareKey");
+                            $method->invoke($entity, $value);
+                        }
+                    }
+                }
+                $items[$itemKey] = $entity;
+            } else {
+                $entity = $items[$itemKey];
+            }
 
-        foreach($data as $datum){
-            foreach($datum as $key => $value){
-                if(str_contains($key, $tableName. "_")){
-                    $bareKey = ucfirst(str_replace($tableName . "_", "", $key));                    
-                    if(in_array($bareKey, ["Created_at", "Update_at"])) $bareKey = $this->strings->toCamelCase($bareKey, true);
-                    if($ref->hasMethod("set" . $bareKey)){
-                        $method = $ref->getMethod("set$bareKey");
-                        $method->invoke($entity, $value);
-                    };   
+            foreach ($relations as $propName => $childClass) {
+                $childRef = new ReflectionClass($childClass);
+                $childEntity = $childRef->newInstance();
+                
+                foreach ($datum as $key => $value) {
+                    if (str_starts_with($key, $propName . '_') && $value !== null) {
+                        $bareKey = ucfirst(str_replace($propName . '_', '', $key));
+                        if (in_array($bareKey, ['Created_at', 'Update_at'])) {
+                            $bareKey = $this->strings->toCamelCase($bareKey, true);
+                        }
+                        if ($childRef->hasMethod("set$bareKey")) {
+                            $method = $childRef->getMethod("set$bareKey");
+                            $method->invoke($childEntity, $value);
+                        }
+                    }
                 }
 
-                $method = "set" . ucfirst($key);
-                $field = $ref->hasProperty($method);
+                $adder = "set" . ucfirst($propName);
+                if ($ref->hasMethod("set" . ucfirst($propName)) && $childEntity->getId() !== null) {
+                    $method = $ref->getMethod($adder);
+                    $method->invoke($entity, $childEntity);
+                }
             }
-            break;
         }
         return $items;
     }

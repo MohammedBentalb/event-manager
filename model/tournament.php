@@ -10,7 +10,7 @@ use Attributes\Table;
 #[Table("tournaments")]
 class Tournament {
     #[Preserve]
-    private $id;
+    private ?int $id = null;
     #[Preserve]
     #[Required]
     private $title;
@@ -34,6 +34,10 @@ class Tournament {
         if(is_numeric($value)){
             return $this->id = abs($value);
         }
+    }
+
+    public function setMatches($value){
+        return $this->matches= [...$this->matches, $value];
     }
 
     public function setTitle($value){
@@ -72,7 +76,7 @@ class Tournament {
         return $this->date;
     }
 
-    public function setCreationDate($value){
+    public function setCreatedAt($value){
         return $this->createdAt = $value;
     }
 

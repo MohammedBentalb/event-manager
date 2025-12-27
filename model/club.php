@@ -10,7 +10,7 @@ use Model\Team;
 #[Table("clubs")]
 class club {
     #[Preserve]
-    private int $id;
+    private ?int $id = null;
     #[Preserve]
     #[Required]
     private string $name;
@@ -20,7 +20,7 @@ class club {
     private string $createdAt;
 
     #[OneToMany("clubId", Team::class)]
-    private array $teams;
+    private array $teams = [];
     
     public function __construct(){}
 
@@ -30,6 +30,10 @@ class club {
         }
     }
 
+    public function setTeams($value){
+        return $this->teams = [...$this->teams, $value];
+    }
+ 
     public function setCity($value){
         return $this->city = $value;
     }

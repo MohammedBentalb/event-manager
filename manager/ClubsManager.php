@@ -10,13 +10,11 @@ class ClubsManager{
     
     public function list(){
         $res = $this->clubRepo->findAll();
-        var_dump($res);
     }
 
     public function listOne(){
         $id = input("give the tournament id: ");
         $res = $this->clubRepo->findById((int) $id);
-        var_dump($res);
     }
 
     public function create(){

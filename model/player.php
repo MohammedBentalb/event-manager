@@ -8,14 +8,14 @@ use Attributes\Table;
 #[Table("players")]
 class Player {
     #[Preserve]
-    private $id;
+    private ?int $id = null;
     #[Preserve]
     #[Required]
-    private $name;
+    private string $name;
     #[Preserve]
     #[Required]
-    private $city;
-    private $createdAt;
+    private string $city;
+    private string $createdAt;
     
     public function __construct(){}
 

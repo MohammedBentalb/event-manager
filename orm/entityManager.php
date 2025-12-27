@@ -60,7 +60,6 @@ abstract class EntityManager {
         $stm = $this->conn->prepare("SELECT ". implode(",", $basePAlias) . " FROM $baseTable $baseTAlias " . implode(" ", $joins) ." ORDER BY " . $baseTAlias . ".created_at");
         $stm->execute();
         $res = $stm->fetchAll();
-        var_dump($res);
         return $res ? $this->entiityFiller->fillEntity(static::$entityClass, $res) : null;
     }
 
