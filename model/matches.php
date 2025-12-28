@@ -39,27 +39,27 @@ class Matches{
     }
 
     public function setScoreA($value){
-        return $this->score_a = $value;
+        $this->score_a = $value;
     }
 
     public function setScoreB($value){
-        return $this->score_b = $value;
+        $this->score_b = $value;
     }
 
     public function setTournamentId($value){
-        return $this->tournamentId = $value;
+        $this->tournamentId = $value;
     }
 
     public function setTeamA($value){
-        return $this->team_a = $value;
+        $this->team_a = $value;
     }
 
     public function setTeamB($value){
-        return $this->team_b = $value;
+        $this->team_b = $value;
     }
 
     public function setWinnerId($value){
-        return $this->winnerId = $value;
+        $this->winnerId = $value;
     }
 
     public function getId(){

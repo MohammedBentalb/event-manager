@@ -29,20 +29,20 @@ class Team{
 
     public function setId($value){
         if(is_numeric($value)){
-            return $this->id = abs($value);
+            $this->id = abs($value);
         }
     }
 
     public function setClubId($value){
-        return $this->clubId = $value;
+        $this->clubId = $value;
     }
 
     public function setName($value){
-        return $this->name = $value;
+        $this->name = $value;
     }
 
     public function setGame($value){
-        return $this->game = $value;
+        $this->game = $value;
     }
 
     public function getId(){
@@ -62,7 +62,7 @@ class Team{
     }
 
     public function setCreatedAt($value){
-        return $this->createdAt = $value;
+        $this->createdAt = $value;
     }
 
     public function getCreatedAt(){

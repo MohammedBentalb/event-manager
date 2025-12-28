@@ -26,20 +26,20 @@ class club {
 
     public function setId($value){
         if(is_numeric($value)){
-            return $this->id = abs($value);
+            $this->id = abs($value);
         }
     }
 
     public function setTeams($value){
-        return $this->teams = [...$this->teams, $value];
+        $this->teams = [...$this->teams, $value];
     }
  
     public function setCity($value){
-        return $this->city = $value;
+        $this->city = $value;
     }
 
     public function setName($value){
-        return $this->name = $value;
+        $this->name = $value;
     }
 
     public function getId(){

@@ -9,6 +9,7 @@ class TournamentsManager{
     
     public function list(){
         $res = $this->tournamentRepo->findAll();
+        var_dump($res);
         // (new Filler())->fillEntity(new club, ["id" => 1, "title" => "testing here", "yiy" => "yisi"]);
     }
 

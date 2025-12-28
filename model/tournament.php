@@ -32,28 +32,28 @@ class Tournament {
 
     public function setId($value){
         if(is_numeric($value)){
-            return $this->id = abs($value);
+            $this->id = abs($value);
         }
     }
 
     public function setMatches($value){
-        return $this->matches= [...$this->matches, $value];
+        $this->matches= [...$this->matches, $value];
     }
 
     public function setTitle($value){
-        return $this->title = $value;
+        $this->title = $value;
     }
 
     public function setCashPrize($value){
-        return $this->cashPrize = $value;
+        $this->cashPrize = $value;
     }
 
     public function setFormat($value){
-        return $this->format = $value;
+        $this->format = $value;
     }
 
     public function setdate($value){
-        return $this->date = $value;
+        $this->date = $value;
     }
 
     public function getId(){
@@ -77,7 +77,7 @@ class Tournament {
     }
 
     public function setCreatedAt($value){
-        return $this->createdAt = $value;
+        $this->createdAt = $value;
     }
 
     public function getCreatedAt(){
